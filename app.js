@@ -2,57 +2,19 @@ const express = require('express')
 const mongoose = require('mongoose')
 const app = express()
 
-// SET THE CONNECTION STRING PROPERLY
+// Import Country Model
+const Country = require('./models/Country')
 
-var host = ''
-var username = ''
-var password = ''
-var port = ''
-var dbname = ''
-
-//read the db credentials file
-var fs = require('fs')
-const { connect } = require('http2')
-var array = fs.readFileSync("C:/db_information.txt").toString().split("\n")
-for(i in array) {
-    if (i == 0) {
-        host += array[i]
-    } else if (i == 1) {
-        username += array[i]
-    } else if (i == 2) {
-        password += array[i]
-    } else if (i == 3) {
-        port += array[i]
-    } else if (i == 4) {
-        dbname += array[i]
-    }
-}
-
-var connstr = "mongodb://"
-connstr += username.replace(/(\r\n|\n|\r)/gm, "") + ":"
-connstr += password.replace(/(\r\n|\n|\r)/gm, "") + "@"
-connstr += host.replace(/(\r\n|\n|\r)/gm, "") + ":"
-connstr += port.replace(/(\r\n|\n|\r)/gm, "") + "/"
-connstr += dbname.replace(/(\r\n|\n|\r)/gm, "") + "?"
-connstr += "authSource=admin"
-
-//connect to db
-mongoose.connect(connstr)
-
-// schema and model setup
-const Schema = mongoose.Schema
-const countrySchema = new Schema({
-    name: {type:String},
-    region: {type:String}
-})
-const Country = mongoose.model('Country', countrySchema)
+const dbString = require('./connectionString')
 
 var allCountries = []
 var allRegions = {}
 var salesRep = []
-
-allMinPeopleCounts = []
+var allMinPeopleCounts = []
 var optimal = []
+
+//connect to db
+mongoose.connect(dbString.connstr)
 
 Country.find({}).then((countries) => {
     countries.forEach(
@@ -69,7 +31,7 @@ Country.find({}).then((countries) => {
         country => {
             if (allRegions.hasOwnProperty(country.region)){
                 allRegions[country.region] += 1
-            }else{
+            } else{
                 allRegions[country.region] = 1
             }
         }
@@ -124,7 +86,7 @@ Country.find({}).then((countries) => {
 })
 
 // 1st endpoint
-app.get( '/countries', (req,res) => 
+app.get('/countries', (req,res) => 
     res.send(allCountries)
 )
 
