@@ -1,0 +1,16 @@
+{
+  "name": "express-demo",
+  "version": "1.0.0",
+  "description": "express-demo ",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "author": "Batuhan Bat",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3",
+    "mongoose": "^6.3.0",
+    "nodemon": "^2.0.15"
+  }
+}
