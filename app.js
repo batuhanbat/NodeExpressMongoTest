@@ -104,8 +104,7 @@ Country.find({}).then((countries) => {
                 toAdd[c % toAdd.length].push(countriesOfRegion[c])
             }
 
-            helper["countryLists"] = toAdd
-            
+            helper["countryLists"] = toAdd            
             allMinPeopleCounts.push(helper)
 
             for (r in allMinPeopleCounts){
@@ -117,10 +116,7 @@ Country.find({}).then((countries) => {
                     mydoc["countryCount"] = listoflists[e].length
                     optimal.push(mydoc)
                 }
-            }
-
-            
-            
+            }            
         }
     )
 }).catch( (e) => {
