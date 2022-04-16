@@ -33,3 +33,10 @@ connstr += dbname.replace(/(\r\n|\n|\r)/gm, "") + "?";
 connstr += "authSource=admin";
 
 mongoose.connect(connstr);
+
+const Schema = mongoose.Schema;
+const countrySchema = new Schema({
+    name: {type:String},
+    region: {type:String}
+})
+const Country = mongoose.model('Country', countrySchema)
