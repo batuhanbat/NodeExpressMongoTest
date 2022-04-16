@@ -40,3 +40,16 @@ const countrySchema = new Schema({
     region: {type:String}
 })
 const Country = mongoose.model('Country', countrySchema)
+
+var allCountries = []
+Country.find({}).then((countries) => {
+    countries.forEach(country => allCountries.push({"name":country.name, "region":country.region}));    
+}).catch( (e) => {
+    console.log(e)
+})
+
+app.get( '/countries', (req,res) => 
+    res.send(allCountries)
+)
+
+app.listen(3000)
