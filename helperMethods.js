@@ -21,16 +21,17 @@ var connectToDB = function connectToDB() {
 // with the docs of db call fillAllCountries and make allCountries and allRegions get filled from db
 var fillAll = function fillAll() {
     try {
-        Country.find().then( countries => 
-            fillAllCountries(countries)
-        )    
+        Country.find().then( countries => {
+            fillCountriesAndRegions(countries)
+            fillSalesRep()
+            fillOptimal()
+        })    
     } catch (err) {
         console.log(err)
     }
 }
 
-// fills allCountries and allRegions from parameter, also fill salesrep and optimal
-var fillAllCountries = function fillAllCountries(countries) {
+var fillCountriesAndRegions = function fillCountriesAndRegions(countries) {
     countries.forEach(
         country => { 
             if (country.name !== undefined && country.name !== null && country.name !== '') {
@@ -45,11 +46,6 @@ var fillAllCountries = function fillAllCountries(countries) {
             }                         
         }
     )
-
-    fillSalesRep()
-
-    fillOptimal()
-
 }
 
 // fills salesRep from allRegions
@@ -116,6 +112,3 @@ exports.optimal = optimal
 
 exports.connectToDB = connectToDB
 exports.fillAll = fillAll
-exports.fillAllCountries = fillAllCountries
-exports.fillSalesRep = fillSalesRep
-exports.fillOptimal = fillOptimal
