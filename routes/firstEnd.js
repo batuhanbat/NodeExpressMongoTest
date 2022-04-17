@@ -1,6 +1,6 @@
 const express = require("express")
 let router = express.Router()
-const app = require("../app")
+const app = require("../helperMethods")
 
 // 1st endpoint
 router.get('/', (req,res) => {
