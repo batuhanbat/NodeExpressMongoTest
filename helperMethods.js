@@ -7,7 +7,6 @@ const Country = require('./models/Country')
 var allCountries = []
 var allRegions = {}
 var salesRep = []
-var allMinPeopleCounts = []
 var optimal = []
 
 // connects to db
@@ -30,7 +29,7 @@ var fillAll = function fillAll() {
     }
 }
 
-// fills allCountries and allRegions from parameter, also fill salesrep and optimal with countries
+// fills allCountries and allRegions from parameter, also fill salesrep and optimal
 var fillAllCountries = function fillAllCountries(countries) {
     countries.forEach(
         country => { 
@@ -49,7 +48,7 @@ var fillAllCountries = function fillAllCountries(countries) {
 
     fillSalesRep()
 
-    fillOptimal(countries)
+    fillOptimal()
 
 }
 
@@ -67,17 +66,17 @@ var fillSalesRep = function fillSalesRep() {
     )  
 }
 
-// fill optimal 
-var fillOptimal = function fillOptimal(countries) {
+// fill optimal from allCountries and allRegions
+var fillOptimal = function fillOptimal() {
     keysList = Object.keys(allRegions)
     keysList.forEach(
         key => { 
             helper={}
             countriesOfRegion = []
             helper["region"] = key
-            for(i in countries){
-                if (countries[i]["region"] === key){
-                    countriesOfRegion.push(countries[i]["name"])
+            for(i in allCountries){
+                if (allCountries[i]["region"] === key){
+                    countriesOfRegion.push(allCountries[i]["name"])
                 }
             }
             
@@ -92,7 +91,8 @@ var fillOptimal = function fillOptimal(countries) {
                 toAdd[c % toAdd.length].push(countriesOfRegion[c])
             }
 
-            helper["countryLists"] = toAdd            
+            helper["countryLists"] = toAdd  
+            var allMinPeopleCounts = []
             allMinPeopleCounts.push(helper)
 
             for (r in allMinPeopleCounts){
@@ -112,7 +112,6 @@ var fillOptimal = function fillOptimal(countries) {
 exports.allCountries = allCountries
 exports.allRegions = allRegions
 exports.salesRep = salesRep
-exports.allMinPeopleCounts = allMinPeopleCounts
 exports.optimal = optimal
 
 exports.connectToDB = connectToDB
