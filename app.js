@@ -6,6 +6,8 @@ const app = express()
 const Country = require('./models/Country')
 //Import Connection String
 const dbString = require('./connectionString')
+// Import Helper Methods
+const helperMethods = require('./helperMethods')
 
 var allCountries = []
 var allRegions = {}
@@ -13,68 +15,10 @@ var salesRep = []
 var allMinPeopleCounts = []
 var optimal = []
 
-function connectToDb() {
-    try {
-        mongoose.connect(dbString.connstr)
-    } catch (error) {
-        console.error('Error while trying to connect DB!')
-    }
-}
-//connect to db
-connectToDb()
-
-function fillSalesRep() {
-    keysList = Object.keys(allRegions)
-    keysList.forEach(
-        key => {
-            toPush = {}
-            toPush["region"] = key
-            toPush["minSalesReq"] = Math.ceil(allRegions[key] / 7) 
-            toPush["maxSalesReq"] = Math.ceil(allRegions[key] / 3) 
-            salesRep.push(toPush)
-        } 
-    )  
-}
-
-function fillOptimal(countries) {
-    keysList = Object.keys(allRegions)
-    keysList.forEach(
-        key => { 
-            helper={}
-            countriesOfRegion = []
-            helper["region"] = key
-            for(i in countries){
-                if (countries[i]["region"] === key){
-                    countriesOfRegion.push(countries[i]["name"])
-                }
-            }
-            
-            toAdd = []
-            i=0
-            while (i<Math.ceil(allRegions[key] / 7)){
-                toAdd.push([])
-                i += 1
-            }
-
-            for (c in countriesOfRegion){
-                toAdd[c % toAdd.length].push(countriesOfRegion[c])
-            }
-
-            helper["countryLists"] = toAdd            
-            allMinPeopleCounts.push(helper)
-
-            for (r in allMinPeopleCounts){
-                var listoflists = allMinPeopleCounts[r]["countryLists"]
-                for (e in listoflists){
-                    mydoc = {}
-                    mydoc["region"] = allMinPeopleCounts[r]["region"]
-                    mydoc["countryList"] = listoflists[e]
-                    mydoc["countryCount"] = listoflists[e].length
-                    optimal.push(mydoc)
-                }
-            }            
-        }
-    )
+try {
+    mongoose.connect(dbString.connstr)
+} catch (error) {
+    console.error('Error while trying to connect DB!')
 }
 
 Country.find({}).then((countries) => {
@@ -93,9 +37,9 @@ Country.find({}).then((countries) => {
         }
     )
 
-    fillSalesRep()
+    helperMethods.fillSalesRep()
 
-    fillOptimal(countries)
+    helperMethods.fillOptimal(countries)
 
     
 }).catch( (e) => {
