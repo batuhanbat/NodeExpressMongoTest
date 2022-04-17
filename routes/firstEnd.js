@@ -21,7 +21,7 @@ router.get('/', (req,res) => {
             toSend["countryCountInRegion"] = countriesInRegion.length
             toSend["countryList"] = countriesInRegion
             if (countriesInRegion.length === 0) {
-                res.send("No such region name exists in DB ! You may want to provide param value without any string quotes.")
+                res.send("No such region name exists in DB ! You may want to provide param value without any string quotes. Also note that the param value is case sensitive.")
             } else {
                 res.send(toSend)
             }            

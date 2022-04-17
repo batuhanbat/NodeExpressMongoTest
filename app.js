@@ -23,22 +23,7 @@ function connectToDb() {
 //connect to db
 connectToDb()
 
-Country.find({}).then((countries) => {
-    countries.forEach(
-        country => { 
-            if (country.name !== undefined && country.name !== null && country.name !== '') {
-                if (country.region !== undefined && country.region !== null && country.region !== '') {
-                    allCountries.push({"name":country.name, "region":country.region})
-                }
-                if (allRegions.hasOwnProperty(country.region)){
-                    allRegions[country.region] += 1
-                } else{
-                    allRegions[country.region] = 1
-                }
-            }                         
-        }
-    )
-
+function fillSalesRep() {
     keysList = Object.keys(allRegions)
     keysList.forEach(
         key => {
@@ -49,7 +34,10 @@ Country.find({}).then((countries) => {
             salesRep.push(toPush)
         } 
     )  
+}
 
+function fillOptimal(countries) {
+    keysList = Object.keys(allRegions)
     keysList.forEach(
         key => { 
             helper={}
@@ -87,6 +75,29 @@ Country.find({}).then((countries) => {
             }            
         }
     )
+}
+
+Country.find({}).then((countries) => {
+    countries.forEach(
+        country => { 
+            if (country.name !== undefined && country.name !== null && country.name !== '') {
+                if (country.region !== undefined && country.region !== null && country.region !== '') {
+                    allCountries.push({"name":country.name, "region":country.region})
+                }
+                if (allRegions.hasOwnProperty(country.region)){
+                    allRegions[country.region] += 1
+                } else{
+                    allRegions[country.region] = 1
+                }
+            }                         
+        }
+    )
+
+    fillSalesRep()
+
+    fillOptimal(countries)
+
+    
 }).catch( (e) => {
     console.log(e)
 })
