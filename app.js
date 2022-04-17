@@ -30,19 +30,14 @@ Country.find({}).then((countries) => {
                 if (country.region !== undefined && country.region !== null && country.region !== '') {
                     allCountries.push({"name":country.name, "region":country.region})
                 }
+                if (allRegions.hasOwnProperty(country.region)){
+                    allRegions[country.region] += 1
+                } else{
+                    allRegions[country.region] = 1
+                }
             }                         
         }
     )
-
-    countries.forEach(
-        country => {
-            if (allRegions.hasOwnProperty(country.region)){
-                allRegions[country.region] += 1
-            } else{
-                allRegions[country.region] = 1
-            }
-        }
-    )      
 
     keysList = Object.keys(allRegions)
     keysList.forEach(
@@ -52,7 +47,11 @@ Country.find({}).then((countries) => {
             toPush["minSalesReq"] = Math.ceil(allRegions[key] / 7) 
             toPush["maxSalesReq"] = Math.ceil(allRegions[key] / 3) 
             salesRep.push(toPush)
-            
+        } 
+    )  
+
+    keysList.forEach(
+        key => { 
             helper={}
             countriesOfRegion = []
             helper["region"] = key

@@ -22,6 +22,7 @@ for(i in array) {
     }
 }
 
+// concat ops on conn. str.
 var connstr = "mongodb://"
 connstr += username.replace(/(\r\n|\n|\r)/gm, "") + ":"
 connstr += password.replace(/(\r\n|\n|\r)/gm, "") + "@"
