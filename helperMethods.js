@@ -1,5 +1,27 @@
 const app = require("./app")
 
+var fillAllCountries = function fillAllCountries(countries) {
+    countries.forEach(
+        country => { 
+            if (country.name !== undefined && country.name !== null && country.name !== '') {
+                if (country.region !== undefined && country.region !== null && country.region !== '') {
+                    app.allCountries.push({"name":country.name, "region":country.region})
+                }
+                if (app.allRegions.hasOwnProperty(country.region)){
+                    app.allRegions[country.region] += 1
+                } else{
+                    app.allRegions[country.region] = 1
+                }
+            }                         
+        }
+    )
+
+    fillSalesRep()
+
+    fillOptimal(countries)
+
+}
+
 var fillSalesRep = function fillSalesRep() {
     keysList = Object.keys(app.allRegions)
     keysList.forEach(
@@ -54,5 +76,6 @@ var fillOptimal = function fillOptimal(countries) {
     )
 }
 
+exports.fillAllCountries = fillAllCountries
 exports.fillSalesRep = fillSalesRep
 exports.fillOptimal = fillOptimal
