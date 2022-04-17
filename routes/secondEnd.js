@@ -1,10 +1,11 @@
 const express = require("express")
 let router = express.Router()
-const app = require("../helperMethods")
+const helperMethods = require("../helperMethods")
 
 // 2nd endpoint
-router.get( '/', (req,res) => 
-    res.send(app.salesRep)
-)
+router.get( '/', (req,res) => {
+    helperMethods.fillSalesRep()
+    res.send(helperMethods.salesRep)
+})
 
 module.exports = router

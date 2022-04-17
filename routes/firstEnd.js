@@ -1,9 +1,11 @@
 const express = require("express")
 let router = express.Router()
-const app = require("../helperMethods")
+const helperMethods = require("../helperMethods")
 
 // 1st endpoint
 router.get('/', (req,res) => {
+    helperMethods.connectToDB()
+    helperMethods.fillFromDb()
     let param = req.query
     if (Object.keys(param).length !== 0) {
         if (param["region"] !== undefined && param["region"] !== null && param["region"] !== "") {
@@ -11,7 +13,7 @@ router.get('/', (req,res) => {
             toSend = {}
             toSend["region"] = regionParam
             countriesInRegion = []
-            app.allCountries.forEach(
+            helperMethods.allCountries.forEach(
                 country => {
                     if (country["region"] === regionParam) {
                         countriesInRegion.push(country["name"])
@@ -29,7 +31,7 @@ router.get('/', (req,res) => {
             res.send("This endpoint can only process query param named region !")
         }  
     } else {
-        res.send(app.allCountries)
+        res.send(helperMethods.allCountries)
     }     
 })
 

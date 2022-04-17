@@ -1,10 +1,11 @@
 const express = require("express")
 let router = express.Router()
-const app = require("../helperMethods")
+const helperMethods = require("../helperMethods")
 
 // 3rd endpoint
-router.get( '/', (req,res) => 
-    res.send(app.optimal)
-)
+router.get( '/', (req,res) => {
+    helperMethods.fillOptimal()
+    res.send(helperMethods.optimal)
+})
 
 module.exports = router

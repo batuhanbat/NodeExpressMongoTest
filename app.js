@@ -3,9 +3,6 @@ const app = express()
 // Import Helper Methods
 const helperMethods = require('./helperMethods')
 
-helperMethods.connectToDB()
-helperMethods.fillAll()
-
 const firstEndpoint = require("./routes/firstEnd")
 app.use("/countries", firstEndpoint)
 
