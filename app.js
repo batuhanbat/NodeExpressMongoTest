@@ -13,29 +13,15 @@ var salesRep = []
 var allMinPeopleCounts = []
 var optimal = []
 
-async function connectToDb() {
+function connectToDb() {
     try {
-        await mongoose.connect(dbString.connstr)
+        mongoose.connect(dbString.connstr)
     } catch (error) {
         console.error('Error while trying to connect DB!')
     }
 }
 //connect to db
 connectToDb()
-
-async function getDBDocs() {
-    Country.find({}).then((countries) => {
-        countries.forEach(
-            country => { 
-                if (country.name !== undefined && country.name !== null && country.name !== '') {
-                    if (country.region !== undefined && country.region !== null && country.region !== '') {
-                        allCountries.push({"name":country.name, "region":country.region})
-                    }
-                }                         
-            }
-        )        
-    })
-}
 
 Country.find({}).then((countries) => {
     countries.forEach(
@@ -124,14 +110,17 @@ app.get('/countries', (req,res) => {
             )
             toSend["countryCountInRegion"] = countriesInRegion.length
             toSend["countryList"] = countriesInRegion
-            res.send(toSend)
+            if (countriesInRegion.length === 0) {
+                res.send("No such region name exists in DB !")
+            } else {
+                res.send(toSend)
+            }            
         } else {
             res.send("This endpoint can only process query param named region !")
         }  
     } else {
         res.send(allCountries)
-    }
-     
+    }     
 })
 
 // 2nd endpoint
