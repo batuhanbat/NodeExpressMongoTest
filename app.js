@@ -4,7 +4,7 @@ const app = express()
 
 // Import Country Model
 const Country = require('./models/Country')
-
+//Import Connection String
 const dbString = require('./connectionString')
 
 var allCountries = []
@@ -13,8 +13,29 @@ var salesRep = []
 var allMinPeopleCounts = []
 var optimal = []
 
+async function connectToDb() {
+    try {
+        await mongoose.connect(dbString.connstr)
+    } catch (error) {
+        console.error('Error while trying to connect DB!')
+    }
+}
 //connect to db
-mongoose.connect(dbString.connstr)
+connectToDb()
+
+async function getDBDocs() {
+    Country.find({}).then((countries) => {
+        countries.forEach(
+            country => { 
+                if (country.name !== undefined && country.name !== null && country.name !== '') {
+                    if (country.region !== undefined && country.region !== null && country.region !== '') {
+                        allCountries.push({"name":country.name, "region":country.region})
+                    }
+                }                         
+            }
+        )        
+    })
+}
 
 Country.find({}).then((countries) => {
     countries.forEach(
@@ -86,9 +107,32 @@ Country.find({}).then((countries) => {
 })
 
 // 1st endpoint
-app.get('/countries', (req,res) => 
-    res.send(allCountries)
-)
+app.get('/countries', (req,res) => {
+    let param = req.query
+    if (Object.keys(param).length !== 0) {
+        if (param["region"] !== undefined && param["region"] !== null && param["region"] !== "") {
+            var regionParam = param["region"]
+            toSend = {}
+            toSend["region"] = regionParam
+            countriesInRegion = []
+            allCountries.forEach(
+                country => {
+                    if (country["region"] === regionParam) {
+                        countriesInRegion.push(country["name"])
+                    }
+                }
+            )
+            toSend["countryCountInRegion"] = countriesInRegion.length
+            toSend["countryList"] = countriesInRegion
+            res.send(toSend)
+        } else {
+            res.send("This endpoint can only process query param named region !")
+        }  
+    } else {
+        res.send(allCountries)
+    }
+     
+})
 
 // 2nd endpoint
 app.get( '/salesrep', (req,res) => 
