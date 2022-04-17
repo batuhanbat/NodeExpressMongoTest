@@ -92,45 +92,19 @@ Country.find({}).then((countries) => {
     console.log(e)
 })
 
-// 1st endpoint
-app.get('/countries', (req,res) => {
-    let param = req.query
-    if (Object.keys(param).length !== 0) {
-        if (param["region"] !== undefined && param["region"] !== null && param["region"] !== "") {
-            var regionParam = param["region"]
-            toSend = {}
-            toSend["region"] = regionParam
-            countriesInRegion = []
-            allCountries.forEach(
-                country => {
-                    if (country["region"] === regionParam) {
-                        countriesInRegion.push(country["name"])
-                    }
-                }
-            )
-            toSend["countryCountInRegion"] = countriesInRegion.length
-            toSend["countryList"] = countriesInRegion
-            if (countriesInRegion.length === 0) {
-                res.send("No such region name exists in DB !")
-            } else {
-                res.send(toSend)
-            }            
-        } else {
-            res.send("This endpoint can only process query param named region !")
-        }  
-    } else {
-        res.send(allCountries)
-    }     
-})
+const firstEndpoint = require("./routes/firstEnd")
+app.use("/countries", firstEndpoint)
 
-// 2nd endpoint
-app.get( '/salesrep', (req,res) => 
-    res.send(salesRep)
-)
+const secondEndpoint = require("./routes/secondEnd")
+app.use("/salesrep", secondEndpoint)
 
-// 3rd endpoint
-app.get( '/optimal', (req,res) => 
-    res.send(optimal)
-)
+const thirdEndpoint = require("./routes/thirdEnd")
+app.use("/optimal", thirdEndpoint)
 
 app.listen(3000)
+
+exports.allCountries = allCountries
+exports.allRegions = allRegions
+exports.salesRep = salesRep
+exports.allMinPeopleCounts = allMinPeopleCounts
+exports.optimal = optimal
