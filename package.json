@@ -4,11 +4,12 @@
   "description": "express-demo ",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "node app.js"
   },
   "author": "Batuhan Bat",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.26.1",
     "express": "^4.17.3",
     "mongoose": "^6.3.0",
     "nodemon": "^2.0.15"

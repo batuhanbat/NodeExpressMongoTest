@@ -3,13 +3,8 @@ let router = express.Router()
 const helperMethods = require("../helperMethods")
 
 // 1st endpoint
-router.get('/', function (req,res){
-    try{
-        helperMethods.connectToDB()
-        helperMethods.fillFromDb()
-    } catch(err) {
-        console.log(err)
-    }    
+router.get('/', async function (req,res) {
+    var a = await helperMethods.handler()    
     try {
         let param = req.query
         if (Object.keys(param).length !== 0) {

@@ -12,22 +12,41 @@ var allMinPeopleCounts = []
 
 // connects to db
 var connectToDB = function connectToDB() { 
-    try {
-        mongoose.connect(dbString.connstr, {useNewUrlParser:true})
-    } catch (error) {
-        console.log('Error while trying to connect DB!')
-    }     
+    return new Promise((resolve, reject) => {
+        try {
+            mongoose.connect(dbString.connstr, {useNewUrlParser:true})
+            resolve("db conn +")
+        } catch (error) {
+            console.log('Error while trying to connect DB!')
+            reject("db conn -")
+        }   
+    })
+      
 }
 
 // with the docs of db fill allCountries and allRegions
 var fillFromDb = function fillFromDb() {   
-    try {
-        Country.find().then( countries => {
-            fillCountriesAndRegions(countries)
-        })  
-    } catch (error) {
-        console.log('Error while trying to fill from DB!')
-    }   
+    return new Promise((resolve, reject) => {
+        try {
+            Country.find().then( countries => {
+                fillCountriesAndRegions(countries)
+            resolve("fill from db +")
+            })  
+        } catch (error) {
+            console.log('Error while trying to fill from DB!')
+            reject("fill from db -")
+        }
+    })
+       
+}
+
+var handler = async function handler() {
+    try{
+        var a = await connectToDB()
+        var b = await fillFromDb()
+    }catch (err) {
+        console.log(err)
+    }      
 }
 
 // fill allCountries and allRegions
@@ -37,7 +56,7 @@ var fillCountriesAndRegions = function fillCountriesAndRegions(countries) {
             if (country.name !== undefined && country.name !== null && country.name !== '') {
                 if (country.region !== undefined && country.region !== null && country.region !== '') {
                     if (!allCountries.some(c => c.name === country.name && c.region === country.region) ) {
-                        allCountries.push({"name":country.name, "region":country.region})
+                        allCountries.push({"name":country.name, "region":country.region})                        
                         if (allRegions.hasOwnProperty(country.region)){
                             allRegions[country.region] += 1
                         } else{
@@ -51,7 +70,8 @@ var fillCountriesAndRegions = function fillCountriesAndRegions(countries) {
 }
 
 // fills salesRep from allRegions
-var fillSalesRep = function fillSalesRep() {
+var fillSalesRep = function fillSalesRep() {       
+  
     keysList = Object.keys(allRegions)
     keysList.forEach(
         key => {
@@ -121,3 +141,4 @@ exports.fillFromDb = fillFromDb
 exports.fillCountriesAndRegions = fillCountriesAndRegions
 exports.fillSalesRep = fillSalesRep
 exports.fillOptimal = fillOptimal
+exports.handler = handler
