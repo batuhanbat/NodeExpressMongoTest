@@ -3,9 +3,9 @@ let router = express.Router()
 const helperMethods = require("../helperMethods")
 
 // 1st endpoint
-router.get('/', async function (req,res) {
-    var a = await helperMethods.handler()    
+router.get('/', async function (req,res) {       
     try {
+        var a = await helperMethods.handler() 
         let param = req.query
         if (Object.keys(param).length !== 0) {
             if (param["region"] !== undefined && param["region"] !== null && param["region"] !== "") {

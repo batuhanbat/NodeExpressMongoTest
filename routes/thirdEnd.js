@@ -12,9 +12,9 @@ const makeGetReq = async () => {
 }
 
 // 3rd endpoint
-router.get( '/', async function (req,res) {
-    var resp = await makeGetReq()
+router.get( '/', async function (req,res) {    
     try {
+        var resp = await makeGetReq()
         var regions = helperMethods.fillRegions(resp)
         var optimals = helperMethods.fillOptimal(regions)
         res.send(optimals)

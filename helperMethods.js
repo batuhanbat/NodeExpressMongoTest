@@ -19,7 +19,7 @@ var connectToDB = function connectToDB() {
     })      
 }
 
-// with the docs of db fill allCountries and allRegions
+// with the docs of db fill allCountries
 var fillFromDb = function fillFromDb() {   
     return new Promise((resolve, reject) => {
         try {
@@ -35,6 +35,7 @@ var fillFromDb = function fillFromDb() {
        
 }
 
+// first connects to db then fills allCountries with the docs of db 
 var handler = async function handler() {
     try{
         var a = await connectToDB()
@@ -59,7 +60,7 @@ var fillCountries = (countries) => {
     )
 }
 
-// fill allRegions
+// create and return allRegions
 var fillRegions = (countries) => {
     var allRegions = {}
     for (i in countries) {
@@ -74,7 +75,7 @@ var fillRegions = (countries) => {
     return allRegions
 }
 
-// fills salesRep from allRegions
+// create and return salesRep
 var fillSalesRep = (allRegions) => {
     var salesRep = []
     keysList = Object.keys(allRegions)
@@ -92,7 +93,7 @@ var fillSalesRep = (allRegions) => {
     return salesRep
 }
 
-// fill optimal from allCountries and allRegions
+// create and return optimal
 var fillOptimal = function fillOptimal(allRegions) {
     var optimal = []
     keysList = Object.keys(allRegions)    

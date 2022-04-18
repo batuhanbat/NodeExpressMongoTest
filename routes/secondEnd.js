@@ -12,9 +12,9 @@ const makeGetReq = async () => {
 }
 
 // 2nd endpoint
-router.get( '/', async function (req,res) {
-        var resp = await makeGetReq()
+router.get( '/', async function (req,res) {        
     try {
+        var resp = await makeGetReq()
         var regions = helperMethods.fillRegions(resp) 
         var salesreps = helperMethods.fillSalesRep(regions)    
         res.send(salesreps)
