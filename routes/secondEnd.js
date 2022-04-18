@@ -5,23 +5,19 @@ const axios = require('axios')
 
 const makeGetReq = async () => {
     try {
-        return await axios.get("http://127.0.0.1:3000/countries")
+        return await axios.get("http://127.0.0.1:3000/countries").then(response => response.data)
     } catch (error) {
         console.error(error)
     }
 }
 
-const waitResp = async () => {
-    const resp = await makeGetReq()
-    return resp
-}
-
 // 2nd endpoint
 router.get( '/', async function (req,res) {
-    var resp = await waitResp()
+        var resp = await makeGetReq()
     try {
-        helperMethods.fillSalesRep()
-        res.send(helperMethods.salesRep)
+        var regions = helperMethods.fillRegions(resp) 
+        var salesreps = helperMethods.fillSalesRep(regions)    
+        res.send(salesreps)
     } catch (err) {
         console.log(err)
     }    

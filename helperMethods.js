@@ -5,10 +5,6 @@ const dbString = require('./connectionString')
 const Country = require('./models/Country')
 
 var allCountries = []
-var allRegions = {}
-var salesRep = []
-var optimal = []
-var allMinPeopleCounts = []
 
 // connects to db
 var connectToDB = function connectToDB() { 
@@ -20,8 +16,7 @@ var connectToDB = function connectToDB() {
             console.log('Error while trying to connect DB!')
             reject("db conn -")
         }   
-    })
-      
+    })      
 }
 
 // with the docs of db fill allCountries and allRegions
@@ -29,7 +24,7 @@ var fillFromDb = function fillFromDb() {
     return new Promise((resolve, reject) => {
         try {
             Country.find().then( countries => {
-                fillCountriesAndRegions(countries)
+                fillCountries(countries)
             resolve("fill from db +")
             })  
         } catch (error) {
@@ -44,24 +39,19 @@ var handler = async function handler() {
     try{
         var a = await connectToDB()
         var b = await fillFromDb()
-    }catch (err) {
+    } catch (err) {
         console.log(err)
     }      
 }
 
-// fill allCountries and allRegions
-var fillCountriesAndRegions = function fillCountriesAndRegions(countries) {
+// fill allCountries 
+var fillCountries = (countries) => {
     countries.forEach(
         country => { 
             if (country.name !== undefined && country.name !== null && country.name !== '') {
                 if (country.region !== undefined && country.region !== null && country.region !== '') {
                     if (!allCountries.some(c => c.name === country.name && c.region === country.region) ) {
                         allCountries.push({"name":country.name, "region":country.region})                        
-                        if (allRegions.hasOwnProperty(country.region)){
-                            allRegions[country.region] += 1
-                        } else{
-                            allRegions[country.region] = 1
-                        } 
                     }                                       
                 }                
             }                         
@@ -69,9 +59,24 @@ var fillCountriesAndRegions = function fillCountriesAndRegions(countries) {
     )
 }
 
+// fill allRegions
+var fillRegions = (countries) => {
+    var allRegions = {}
+    for (i in countries) {
+        var country = countries[i]
+        
+        if (allRegions.hasOwnProperty(country.region)) {
+            allRegions[country.region] += 1
+        } else {
+            allRegions[country.region] = 1
+        }
+    } 
+    return allRegions
+}
+
 // fills salesRep from allRegions
-var fillSalesRep = function fillSalesRep() {       
-  
+var fillSalesRep = (allRegions) => {
+    var salesRep = []
     keysList = Object.keys(allRegions)
     keysList.forEach(
         key => {
@@ -79,15 +84,17 @@ var fillSalesRep = function fillSalesRep() {
             toPush["region"] = key
             toPush["minSalesReq"] = Math.ceil((allRegions[key] / 7))
             toPush["maxSalesReq"] = Math.ceil((allRegions[key] / 3))
-            if (!salesRep.some(s => s.region === toPush.region && s.minSalesReq === toPush.minSalesReq && s.maxSalesReq === toPush.maxSalesReq) ) {
+            if (!salesRep.some(s => s.region === toPush.region && s.minSalesReq === toPush.minSalesReq && s.maxSalesReq === toPush.maxSalesReq)) {
                 salesRep.push(toPush)
-            }            
-        } 
-    )  
+            }
+        }
+    )
+    return salesRep
 }
 
 // fill optimal from allCountries and allRegions
-var fillOptimal = function fillOptimal() {
+var fillOptimal = function fillOptimal(allRegions) {
+    var optimal = []
     keysList = Object.keys(allRegions)    
     keysList.forEach(
         key => {             
@@ -110,7 +117,8 @@ var fillOptimal = function fillOptimal() {
                 toAdd[c % toAdd.length].push(countriesOfRegion[c])
             }
 
-            helper["countryLists"] = toAdd              
+            helper["countryLists"] = toAdd 
+            var allMinPeopleCounts = []             
             if (!allMinPeopleCounts.some(a => a.region === helper.region)){
                 allMinPeopleCounts.push(helper)
             }            
@@ -129,16 +137,15 @@ var fillOptimal = function fillOptimal() {
             }            
         }
     )
+    return optimal
 }
 
 exports.allCountries = allCountries
-exports.allRegions = allRegions
-exports.salesRep = salesRep
-exports.optimal = optimal
 
 exports.connectToDB = connectToDB
 exports.fillFromDb = fillFromDb
-exports.fillCountriesAndRegions = fillCountriesAndRegions
+exports.fillCountries = fillCountries
+exports.fillRegions = fillRegions
 exports.fillSalesRep = fillSalesRep
 exports.fillOptimal = fillOptimal
 exports.handler = handler
