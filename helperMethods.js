@@ -16,7 +16,7 @@ var connectToDB = function connectToDB() {
         mongoose.connect(dbString.connstr, {useNewUrlParser:true})
     } catch (error) {
         console.log('Error while trying to connect DB!')
-    }    
+    }     
 }
 
 // with the docs of db fill allCountries and allRegions
