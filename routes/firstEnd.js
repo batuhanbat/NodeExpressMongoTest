@@ -7,7 +7,7 @@ router.get('/', async function(req,res) {
     try{
         helperMethods.connectToDB()
         helperMethods.fillFromDb()
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        //await new Promise(resolve => setTimeout(resolve, 1000));
     } catch(err) {
         console.log(err)
     }
