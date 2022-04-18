@@ -17,7 +17,7 @@ router.get( '/', async function(req,res) {
             console.error(error)    
         })
         requ.end()
-        //await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 1000));
     } catch (err) {
         console.log(err)
     }
