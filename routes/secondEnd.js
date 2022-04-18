@@ -10,14 +10,23 @@ const options = {
 }  
 
 // 2nd endpoint
-router.get( '/', (req,res) => {
-    const requ = http.request(options)
-    requ.on('error', error => {
-        console.error(error)    
-    })
-    requ.end()
-    helperMethods.fillSalesRep()
-    res.send(helperMethods.salesRep)
+router.get( '/', async function (req,res) {
+    try {
+        const requ = http.request(options)
+        requ.on('error', error => {
+            console.error(error)    
+        })
+        requ.end()
+        //await new Promise(resolve => setTimeout(resolve, 1000));
+    } catch (err) {
+        console.log(err)
+    }    
+    try {
+        helperMethods.fillSalesRep()
+        res.send(helperMethods.salesRep)
+    } catch (err) {
+        console.log(err)
+    }    
 })
 
 module.exports = router

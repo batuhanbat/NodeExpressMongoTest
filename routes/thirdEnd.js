@@ -10,14 +10,23 @@ const options = {
 }  
 
 // 3rd endpoint
-router.get( '/', (req,res) => {
-    const requ = http.request(options)
-    requ.on('error', error => {
-        console.error(error)    
-    })
-    requ.end()
-    helperMethods.fillOptimal()
-    res.send(helperMethods.optimal)
+router.get( '/', async function(req,res) {
+    try {
+        const requ = http.request(options)
+        requ.on('error', error => {
+            console.error(error)    
+        })
+        requ.end()
+        //await new Promise(resolve => setTimeout(resolve, 1000));
+    } catch (err) {
+        console.log(err)
+    }
+    try {
+        helperMethods.fillOptimal()
+        res.send(helperMethods.optimal)
+    } catch (err) {
+        console.log(err)
+    }    
 })
 
 module.exports = router

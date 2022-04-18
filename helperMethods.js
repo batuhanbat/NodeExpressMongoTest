@@ -15,19 +15,19 @@ var connectToDB = function connectToDB() {
     try {
         mongoose.connect(dbString.connstr, {useNewUrlParser:true})
     } catch (error) {
-        console.error('Error while trying to connect DB!')
-    }
+        console.log('Error while trying to connect DB!')
+    }    
 }
 
 // with the docs of db fill allCountries and allRegions
-var fillFromDb = function fillFromDb() {
+var fillFromDb = function fillFromDb() {   
     try {
         Country.find().then( countries => {
             fillCountriesAndRegions(countries)
-        })    
-    } catch (err) {
-        console.log(err)
-    }
+        })  
+    } catch (error) {
+        console.log('Error while trying to fill from DB!')
+    }   
 }
 
 // fill allCountries and allRegions
